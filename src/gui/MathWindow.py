@@ -1,14 +1,15 @@
-from PySide6.QtGui import Qt, QPaintEvent, QPainter
-from PySide6.QtWidgets import QGraphicsDropShadowEffect, QVBoxLayout, QWidget
+from PySide6.QtGui import Qt, QPaintEvent, QPainter, QFont
+from PySide6.QtWidgets import QGraphicsDropShadowEffect, QVBoxLayout, QWidget, QApplication
 
+from .MathInput import MathInput
 from .TitleBarWidget import TitleBarWidget
-from .consts import *
+from .colors import *
 
 BORDER_RADIUS = 12
 
 
 class MathWindow(QWidget):
-    def __init__(self):
+    def __init__(self, app: QApplication):
         super().__init__()
 
         self.setWindowFlag(Qt.FramelessWindowHint)
@@ -16,6 +17,9 @@ class MathWindow(QWidget):
 
         self.setFixedHeight(702)
         self.setFixedWidth(1050)
+
+        font = QFont('Montserrat', 14)
+        app.setFont(font)
 
         shadow_effect = QGraphicsDropShadowEffect(self)
         shadow_effect.setBlurRadius(24)
@@ -27,7 +31,11 @@ class MathWindow(QWidget):
         layout = QVBoxLayout()
         layout.setContentsMargins(BORDER_RADIUS, BORDER_RADIUS, BORDER_RADIUS, BORDER_RADIUS)
 
-        layout.addWidget(TitleBarWidget(), 0, Qt.AlignTop)
+        title_bar = TitleBarWidget()
+
+        layout.addWidget(title_bar, 0, Qt.AlignTop)
+
+        layout.addWidget(MathInput(), 1, Qt.AlignHCenter | Qt.AlignTop)
 
         self.setStyleSheet('''
         * {

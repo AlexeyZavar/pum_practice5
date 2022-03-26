@@ -34,13 +34,13 @@ colored_formatter = ColoredFormatter(style='{')
 
 def create_console_handler():
     console_logger = logging.StreamHandler(sys.stdout)
-    console_logger.setLevel(logging.DEBUG)
+    console_logger.setLevel(logging.INFO)
     console_logger.setFormatter(colored_formatter)
 
     return console_logger
 
 
-logging.basicConfig(format=format, datefmt=datefmt, style='{', level=logging.DEBUG, handlers=[create_console_handler()])
+logging.basicConfig(format=format, datefmt=datefmt, style='{', level=logging.INFO, handlers=[create_console_handler()])
 
 from .lexer import Lexer
 from .tokenizer import Tokenizer, Token

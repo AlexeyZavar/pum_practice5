@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QApplication
 from src import MathWindow
 
 app = QApplication()
-math_window = MathWindow()
+math_window = MathWindow(app)
 
 math_window.show()
 

@@ -1,21 +1,16 @@
-import time
-
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon, QFont
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QHBoxLayout, QPushButton, QLabel, QFrame
 
 
-class TitleBarWidget(QWidget):
+class TitleBarWidget(QFrame):
     def __init__(self):
         super().__init__()
 
         layout = QHBoxLayout()
         layout.setContentsMargins(20, 20, 20, 20)
 
-        font = QFont('Nunito Sans', 16)
         label = QLabel('Math Solver | by AlexeyZavar')
-        label.setFont(font)
-
         layout.addWidget(label, alignment=Qt.AlignLeft)
 
         layout.addSpacing(1000)
@@ -35,8 +30,18 @@ class TitleBarWidget(QWidget):
         layout.addWidget(self.close_btn)
 
         self.setStyleSheet('''
+        QFrame {
+            border-width: 3px;
+            border-style: solid;
+            border-color: transparent transparent #f7f7f7 transparent;
+        }
+        
+        QLabel {
+            border: none;
+        }
+        
         QPushButton {
-            background: transparent;
+            background-color: transparent;
             border-radius: 12px;
         }
         

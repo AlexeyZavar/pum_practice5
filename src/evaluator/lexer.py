@@ -186,10 +186,13 @@ class Lexer:
         msg = 'Excepted {expected}, but got "{char}"'.format(expected=expected, char=self._current_char)
 
         logger.error(msg)
+        self._reset()
+
         raise LexerException(self._index, msg)
 
     def parse(self, s: str):
-        assert s
+        if not s:
+            raise LexerException(0, 'Empty input string')
 
         for i, ch in enumerate(s):
             if ch == ' ':
