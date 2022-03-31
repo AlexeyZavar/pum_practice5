@@ -80,8 +80,17 @@ class Evaluator:
     def _eval_function(self, item: Tuple[str, Token], value: str):
         assert item[1] == Token.FUNCTION
 
-        func = self._functions.get(item[0])
-        if not func:
-            raise EvaluatorException(f'Unknown function {item}')
+        name = item[0]
+        pos = True
 
-        return func(float(value))
+        if name.startswith(SYMBOL_MINUS):
+            name = item[0][1:]
+            pos = False
+
+        func = self._functions.get(name)
+        if not func:
+            raise EvaluatorException(f'Unknown function {name}')
+
+        res = func(float(value))
+
+        return res if pos else -res

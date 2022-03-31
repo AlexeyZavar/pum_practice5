@@ -15,10 +15,17 @@ class MathInput(QWidget):
 
         layout = QVBoxLayout()
 
-        self.line_edit = QLineEdit()
-        self.line_edit.installEventFilter(self)
+        self.error_pointer = QLabel()
+        self.error_pointer.setAlignment(Qt.AlignCenter)
 
         font = QFont('JetBrains Mono', 18)
+
+        self.error_pointer.setFont(font)
+
+        layout.addWidget(self.error_pointer)
+
+        self.line_edit = QLineEdit()
+        self.line_edit.installEventFilter(self)
 
         self.line_edit.setFont(font)
         self.line_edit.setFixedHeight(48)
@@ -32,6 +39,7 @@ class MathInput(QWidget):
 
         self.error_label = QLabel()
         self.error_label.setAlignment(Qt.AlignHCenter)
+        self.error_label.setFont(QFont('Montserrat', 14))
 
         layout.addWidget(self.error_label)
 
@@ -70,7 +78,8 @@ class MathInput(QWidget):
 
                     pos -= 1
 
-            elif event.text() in OPERATORS and event.text() != SYMBOL_DEGREE:
+            elif event.text() in OPERATORS and event.text() != SYMBOL_DEGREE and text[
+                self.line_edit.cursorPosition() - 1] != SYMBOL_DEGREE:
                 pos = self.line_edit.cursorPosition()
 
                 if event.text() == SYMBOL_MINUS and (len(text) == 0 or text[pos - 1] == SYMBOL_BRACKET_OPEN):
@@ -89,9 +98,13 @@ class MathInput(QWidget):
             try:
                 _ = self.lexer.parse(text)
                 self.error_label.setText('')
+                self.error_pointer.setText('')
             except LexerException as err:
                 self.error_label.setText(str(err))
-                # todo: err.pos
+
+                pointer = err.pos
+                pointer -= 1
+                self.error_pointer.setText(' ' * pointer + '↓' + ' ' * (len(text) - pointer - 2))
 
             return True
 

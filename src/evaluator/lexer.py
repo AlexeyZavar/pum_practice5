@@ -109,8 +109,6 @@ class Lexer:
             self._flush_buffer()
             return 'X'
 
-        self._raise_exception()
-
     def _state_i_r_shared(self):
         if self._current_char.isdigit():
             self._append_current_char()
@@ -126,8 +124,6 @@ class Lexer:
             self._flush_buffer()
             self._flush_current_char()
             return 'S'
-
-        self._raise_exception()
 
     def _state_i(self):
         if self._current_char in COMMAS:
@@ -150,8 +146,6 @@ class Lexer:
             self._flush_current_char()
             return 'S'
 
-        self._raise_exception()
-
     def _state_f(self):
         if self._current_char in ALPHABET:
             self._append_current_char()
@@ -162,8 +156,6 @@ class Lexer:
             self._flush_buffer()
             self._flush_current_char()
             return 'S'
-
-        self._raise_exception()
 
     def _state_x(self):
         self._is_function = True
@@ -178,17 +170,16 @@ class Lexer:
             self._flush_current_char()
             return 'S'
 
-        self._raise_exception()
-
     def _raise_exception(self):
         expected = self._expectations[self._state]
 
         msg = 'Excepted {expected}, but got "{char}"'.format(expected=expected, char=self._current_char)
+        index = self._index
 
         logger.error(msg)
         self._reset()
 
-        raise LexerException(self._index, msg)
+        raise LexerException(index, msg)
 
     def parse(self, s: str):
         if not s:
@@ -200,7 +191,12 @@ class Lexer:
 
             self._index = i
             self._current_char = ch
-            self._state = self._machine[self._state]()
+
+            state = self._machine[self._state]()
+            if state is None:
+                self._raise_exception()
+
+            self._state = state
 
         self._flush_buffer()
 
@@ -208,6 +204,11 @@ class Lexer:
             # todo: wtf
             self._state = 'B_ERR'
             self._current_char = self._brackets_count
+
+            self._raise_exception()
+
+        if self._result[-1] in OPERATORS:
+            self._state = 'S'
 
             self._raise_exception()
 
