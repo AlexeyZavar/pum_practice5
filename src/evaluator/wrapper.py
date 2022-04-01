@@ -1,4 +1,8 @@
-from src import Lexer, Tokenizer, Converter, Evaluator, LexerException
+from .converter import Converter
+from .evaluator import Evaluator
+from .exceptions import LexerException
+from .lexer import Lexer
+from .tokenizer import Tokenizer
 
 
 class EasyWrapper:
@@ -21,4 +25,4 @@ class EasyWrapper:
         self.converter_result = self.converter.convert(self.tokenizer_result)
 
     def __call__(self, x: float = 0):
-        return self.evaluator.eval(self.converter_result)
+        return self.evaluator.eval(self.converter_result, x)

@@ -46,4 +46,6 @@ from .lexer import Lexer
 from .tokenizer import Tokenizer, Token
 from .converter import Converter
 from .evaluator import Evaluator
+from .solvers import *
+from .consts import *
 from .exceptions import *

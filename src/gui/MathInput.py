@@ -50,7 +50,7 @@ class MathInput(QWidget):
             key = event.key()
             text = self.line_edit.text()
 
-            if key == 40:
+            if key == 40:  # opening bracket
                 pos = self.line_edit.cursorPosition()
 
                 text = text[:pos] + '()' + text[pos:]
@@ -79,7 +79,7 @@ class MathInput(QWidget):
                     pos -= 1
 
             elif event.text() in OPERATORS and event.text() != SYMBOL_DEGREE and text[
-                self.line_edit.cursorPosition() - 1] != SYMBOL_DEGREE:
+                self.line_edit.cursorPosition() - 1] != SYMBOL_DEGREE:  # any operators except degree
                 pos = self.line_edit.cursorPosition()
 
                 if event.text() == SYMBOL_MINUS and (len(text) == 0 or text[pos - 1] == SYMBOL_BRACKET_OPEN):
@@ -89,9 +89,9 @@ class MathInput(QWidget):
                     text = text[:pos] + ' ' + event.text() + ' ' + text[pos:]
                     self.line_edit.setText(text)
                     self.line_edit.setCursorPosition(pos + 3)
-            elif event.text() in [' ', '=']:
+            elif event.text() in [' ', '=']:  # just fuck these symbols
                 pass
-            else:
+            else:  # ok
                 self.line_edit.keyPressEvent(event)
                 text = self.line_edit.text()
 

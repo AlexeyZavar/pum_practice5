@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from src import Lexer, Tokenizer, Token, Converter, Evaluator, LexerException, EvaluatorException
+from src import Lexer, Tokenizer, Token, Converter, Evaluator, LexerException, EvaluatorException, EasyWrapper
 
 
 class TestLexer(unittest.TestCase):
@@ -187,6 +187,12 @@ class TestEvaluator(unittest.TestCase):
 
         self.assertAlmostEqual(12.088767291912456, res)
 
+    def test_x2(self):
+        exp = 'x-1'
+        res = self.get_result(exp, 1)
+
+        self.assertEqual(0, res)
+
     def test_divide_by_zero(self):
         exp = '1/0'
         res = self.get_result(exp)
@@ -217,3 +223,14 @@ class TestEvaluator(unittest.TestCase):
 
         with self.assertRaises(EvaluatorException):
             _ = self.evaluator.eval(res)
+
+
+class TestWrapper(unittest.TestCase):
+    def get_result(self, exp: str, x: float = 0):
+        return EasyWrapper(exp)(x)
+
+    def test_x(self):
+        exp = 'x-1'
+        res = self.get_result(exp, 1)
+
+        self.assertEqual(0, res)
