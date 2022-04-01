@@ -111,10 +111,10 @@ class Lexer:
             self._flush_buffer()
             return 'X'
 
-    def _state_i_r_shared(self):
+    def _state_i_r_shared(self, caller: str):
         if self._current_char.isdigit():
             self._append_current_char()
-            return 'I'
+            return caller
 
         if self._current_char == SYMBOL_BRACKET_CLOSE:
             self._brackets_count -= 1
@@ -129,13 +129,14 @@ class Lexer:
 
     def _state_i(self):
         if self._current_char in COMMAS:
+            self._current_char = '.'
             self._append_current_char()
             return 'R'
 
-        return self._state_i_r_shared()
+        return self._state_i_r_shared('I')
 
     def _state_r(self):
-        return self._state_i_r_shared()
+        return self._state_i_r_shared('R')
 
     def _state_b(self):
         if self._current_char == SYMBOL_BRACKET_CLOSE:

@@ -5,8 +5,9 @@ from .wrapper import EasyWrapper
 
 logger = logging.getLogger('Lexer')
 
-EPSILON = 0.00001
+EPSILON = 0.001
 N = int(100000 / 4)
+MAX_STEPS = 10000
 
 
 def solve_using_secant(expr: EasyWrapper, a: float, b: float):
@@ -28,6 +29,11 @@ def solve_using_secant(expr: EasyWrapper, a: float, b: float):
 
         if abs(expr(x)) <= EPSILON:
             break
+
+        if step >= MAX_STEPS:
+            return None
+
+        step += 1
 
     return x
 

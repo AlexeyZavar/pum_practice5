@@ -9,6 +9,8 @@ app = QApplication()
 font = QFont('Montserrat', 14)
 app.setFont(font)
 
+app.setStyle('fusion')
+
 math_window = MathWindow(app)
 
 math_window.show()
