@@ -11,6 +11,8 @@ from .tokenizer import Token
 logger = logging.getLogger('Evaluator')
 
 functions_cache = {item[0]: item[1] for item in getmembers(math, isbuiltin)}
+# giga-brain move
+functions_cache.update({f'co{item[0]}': lambda x: 1 / functions_cache[item[0]](x) for item in functions_cache.items()})
 
 
 class Evaluator:
