@@ -1,6 +1,4 @@
 import logging
-import math
-from inspect import getmembers, isbuiltin
 from typing import List, Tuple, Union
 
 from .consts import *
@@ -9,15 +7,6 @@ from .exceptions import EvaluatorException
 from .tokenizer import Token
 
 logger = logging.getLogger('Evaluator')
-
-FUNCTIONS = {item[0]: item[1] for item in getmembers(math, isbuiltin)}
-# giga-brain move
-FUNCTIONS.update({f'co{item[0]}': lambda x, f=FUNCTIONS[item[0]]: 1.0 / f(x) for item in FUNCTIONS.items()})
-FUNCTIONS['ln'] = math.log
-FUNCTIONS['lb'] = math.log2
-FUNCTIONS['lg'] = math.log10
-FUNCTIONS['log_two'] = math.log2
-FUNCTIONS['log_ten'] = math.log10
 
 
 class Evaluator:

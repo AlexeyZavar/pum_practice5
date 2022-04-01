@@ -94,6 +94,13 @@ class TestLexer(unittest.TestCase):
 
         self.assertEqual(3, context.exception.pos)
 
+    def test_throws10(self):
+        with self.assertRaises(LexerException) as context:
+            exp = 'cotan'
+            _ = self.lexer.parse(exp)
+
+        self.assertEqual(6, context.exception.pos)
+
     def test_result(self):
         exp = '1+2/3^4'
         res = self.lexer.parse(exp)

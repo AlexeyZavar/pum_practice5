@@ -2,6 +2,7 @@ import logging
 from typing import List
 
 from .consts import *
+from .consts import FUNCTIONS
 from .exceptions import LexerException
 
 logger = logging.getLogger('Lexer')
@@ -208,7 +209,7 @@ class Lexer:
 
             self._raise_exception()
 
-        if self._result[-1] in OPERATORS:
+        if self._result[-1] in OPERATORS or self._result[-1] in FUNCTIONS:
             self._state = 'S'
             self._current_char = ''
             self._index = len(s) + 1

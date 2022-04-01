@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt, QEvent, Signal
 from PySide6.QtGui import QFont, QKeyEvent
 from PySide6.QtWidgets import QLineEdit, QWidget, QVBoxLayout, QLabel
 
-from src import LexerException, EasyWrapper
+from src import EasyWrapper
 from src.evaluator.consts import OPERATORS, SYMBOL_DEGREE, SYMBOL_MINUS, SYMBOL_BRACKET_OPEN
 
 
@@ -99,34 +99,30 @@ class MathInput(QWidget):
                 self.line_edit.keyPressEvent(event)
                 text = self.line_edit.text()
 
-            try:
-                if not event.text() or not all(ch in string.printable for ch in event.text()) and key not in [16777219,
-                                                                                                              16777223]:  # backspace, delete
-                    return True
+            if not event.text() or not all(ch in string.printable for ch in event.text()) and key not in [16777219,
+                                                                                                          16777223]:  # backspace, delete
+                return True
 
-                res = EasyWrapper(text)
+            res = EasyWrapper(text)
 
-                if res.valid:
-                    self.error_label.setText('')
-                    self.error_pointer.setText('')
+            if res.valid:
+                self.error_label.setText('')
+                self.error_pointer.setText('')
 
-                    self.valid = True
+                self.valid = True
 
-                    self.expressionChanged.emit()
-                else:
-                    self.error_label.setText(str(res.err))
-
-                    self.valid = False
-
-                    self.expressionChanged.emit()
-            except LexerException as err:
-                self.error_label.setText(str(err))
+                self.expressionChanged.emit()
+            else:
+                self.error_label.setText(str(res.err))
 
                 self.valid = False
 
-                pointer = err.pos
-                pointer -= 1
-                self.error_pointer.setText(' ' * pointer + '↓' + ' ' * (len(text) - pointer - 2))
+                if res.err.pos != -1:
+                    pointer = res.err.pos
+                    pointer -= 1
+                    self.error_pointer.setText(' ' * pointer + '↓' + ' ' * (len(text) - pointer - 2))
+                else:
+                    self.error_pointer.setText('')
 
                 self.expressionChanged.emit()
 

@@ -17,7 +17,7 @@ def solve_using_secant(expr: EasyWrapper, a: float, b: float):
         a1 = expr(a)
         b1 = expr(b)
 
-        if a1 == b1:
+        if a1 == b1 or a1 is None or b1 is None:
             logger.error('Division by zero')
             return None
 
@@ -27,7 +27,11 @@ def solve_using_secant(expr: EasyWrapper, a: float, b: float):
         a = b
         b = x
 
-        if abs(expr(x)) <= EPSILON:
+        r = expr(x)
+        if r is None:
+            return None
+
+        if abs(r) <= EPSILON:
             break
 
         if step >= MAX_STEPS:
@@ -46,7 +50,10 @@ def integral_using_simpson(expr: EasyWrapper, a: float, b: float, callback: Call
 
     for i in range(N):
         # https://en.wikipedia.org/wiki/Simpson%27s_rule
-        res += (dx / 6) * (expr(a + i * dx) + 4 * expr((2 * a + (2 * i + 1) * dx) / 2) + expr(a + (i + 1) * dx))
+        try:
+            res += (dx / 6) * (expr(a + i * dx) + 4 * expr((2 * a + (2 * i + 1) * dx) / 2) + expr(a + (i + 1) * dx))
+        except TypeError:
+            pass
 
         # this method can be slow, so give some feedback on operation progress
         if i % 10000 == 0 and callback is not None:
