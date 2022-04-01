@@ -29,7 +29,7 @@ class TestLexer(unittest.TestCase):
         exp = '23942830428482304.93949394+99999999991,22^1338.228'
         res = self.lexer.parse(exp)
 
-        self.assertEqual(['23942830428482304.93949394', '+', '99999999991,22', '^', '1338.228'], res.result)
+        self.assertEqual(['23942830428482304.93949394', '+', '99999999991.22', '^', '1338.228'], res.result)
 
     def test_throws1(self):
         with self.assertRaises(LexerException) as context:
@@ -86,6 +86,13 @@ class TestLexer(unittest.TestCase):
             _ = self.lexer.parse(exp)
 
         self.assertEqual(5, context.exception.pos)
+
+    def test_throws9(self):
+        with self.assertRaises(LexerException) as context:
+            exp = '1.1.3+2'
+            _ = self.lexer.parse(exp)
+
+        self.assertEqual(3, context.exception.pos)
 
     def test_result(self):
         exp = '1+2/3^4'
