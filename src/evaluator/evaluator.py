@@ -28,7 +28,12 @@ class Evaluator:
         assert converter_result
 
         try:
-            return self._eval(converter_result.result, x)
+            res = self._eval(converter_result.result, x)
+
+            if not isinstance(res, float):
+                res = float(res)
+
+            return res
         except ZeroDivisionError:
             logger.debug('Unable to evaluate because of division by zero')
             return None

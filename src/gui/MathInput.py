@@ -1,5 +1,7 @@
+import string
+
 import PySide6
-from PySide6.QtCore import Qt, QEvent
+from PySide6.QtCore import Qt, QEvent, Signal
 from PySide6.QtGui import QFont, QKeyEvent
 from PySide6.QtWidgets import QLineEdit, QWidget, QVBoxLayout, QLabel
 
@@ -8,10 +10,13 @@ from src.evaluator.consts import OPERATORS, SYMBOL_DEGREE, SYMBOL_MINUS, SYMBOL_
 
 
 class MathInput(QWidget):
+    expressionChanged = Signal()
+
     def __init__(self):
         super().__init__()
 
         self.lexer = Lexer()
+        self.valid = False
 
         layout = QVBoxLayout()
 
@@ -96,15 +101,27 @@ class MathInput(QWidget):
                 text = self.line_edit.text()
 
             try:
+                if not event.text() or not all(ch in string.printable for ch in event.text()) and key not in [16777219,
+                                                                                                              16777223]:  # backspace, delete
+                    return True
+
                 _ = self.lexer.parse(text)
                 self.error_label.setText('')
                 self.error_pointer.setText('')
+
+                self.valid = True
+
+                self.expressionChanged.emit()
             except LexerException as err:
                 self.error_label.setText(str(err))
+
+                self.valid = False
 
                 pointer = err.pos
                 pointer -= 1
                 self.error_pointer.setText(' ' * pointer + '↓' + ' ' * (len(text) - pointer - 2))
+
+                self.expressionChanged.emit()
 
             return True
 

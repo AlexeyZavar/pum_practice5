@@ -105,6 +105,8 @@ class Lexer:
             return 'F'
 
         if self._current_char == SYMBOL_VARIABLE:
+            self._is_function = True
+
             self._append_current_char()
             self._flush_buffer()
             return 'X'
@@ -158,8 +160,6 @@ class Lexer:
             return 'S'
 
     def _state_x(self):
-        self._is_function = True
-
         if self._current_char == SYMBOL_BRACKET_CLOSE:
             self._brackets_count -= 1
             self._flush_current_char()
@@ -209,6 +209,8 @@ class Lexer:
 
         if self._result[-1] in OPERATORS:
             self._state = 'S'
+            self._current_char = ''
+            self._index = len(s) + 1
 
             self._raise_exception()
 
