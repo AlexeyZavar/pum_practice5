@@ -64,7 +64,7 @@ class Lexer:
 
     def _flush_buffer(self):
         if self._buffer:
-            logger.debug('Flushing buffer with "{buffer}"'.format(buffer=self._buffer))
+            logger.debug(f'Flushing buffer with "{self._buffer}"')
 
             self._result.append(self._buffer)
             self._buffer = ''
@@ -72,11 +72,11 @@ class Lexer:
             logger.debug('Nothing to flush')
 
     def _append_current_char(self):
-        logger.debug('Buffering "{char}"'.format(char=self._current_char))
+        logger.debug(f'Buffering "{self._current_char}"')
         self._buffer += self._current_char
 
     def _flush_current_char(self):
-        logger.debug('Flushing "{char}"'.format(char=self._current_char))
+        logger.debug(f'Flushing "{self._current_char}"')
         self._result.append(self._current_char)
 
     def _reset(self):
@@ -175,7 +175,7 @@ class Lexer:
     def _raise_exception(self):
         expected = self._expectations[self._state]
 
-        msg = 'Excepted {expected}, but got "{char}"'.format(expected=expected, char=self._current_char)
+        msg = f'Excepted {expected}, but got "{self._current_char}"'
         index = self._index
 
         logger.error(msg)

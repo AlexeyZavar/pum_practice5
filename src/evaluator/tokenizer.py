@@ -54,7 +54,7 @@ class Tokenizer:
                 else:
                     token = Token.INTEGER
 
-            logger.debug('"{lexeme}" is a(n) {token}'.format(lexeme=item, token=token.name))
+            logger.debug(f'"{item}" is a(n) {token.name}')
             result.append((item, token))
 
         return TokenizerResult(result, lexer_result)

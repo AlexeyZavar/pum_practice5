@@ -29,7 +29,7 @@ class EasyWrapper:
                 name = item[0].strip('-')
                 if name not in FUNCTIONS:
                     self.valid = False
-                    self.err = LexerException(-1, f'Unknown function {name}')
+                    self.err = LexerException(-1, f'Unknown function "{name}"')
 
                     return
 

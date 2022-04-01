@@ -47,30 +47,30 @@ class Converter:
 
         for item in tokenizer_result.result:
             if item[1] in (Token.INTEGER, Token.VARIABLE):
-                logger.debug('Pushing "{token}" to the result'.format(token=item))
+                logger.debug(f'Pushing "{item}" to the result')
                 result.append(item)
             elif item[1] == Token.FUNCTION:
-                logger.debug('Pushing function "{token}" on the stack'.format(token=item))
+                logger.debug(f'Pushing function "{item}" on the stack')
                 stack.append(item)
             elif item[1] == Token.OPERATOR:
                 priority = self._get_priority(item)
                 logger.debug(
-                    'Got an operator "{token}" with priority "{priority}"'.format(token=item, priority=priority))
+                    f'Got an operator "{item}" with priority "{priority}"')
 
                 if stack and self._get_priority(stack[-1]) >= priority:
                     while stack and self._get_priority(stack[-1]) >= priority:
-                        logger.debug('Pushing "{token}" to the result from the stack'.format(token=stack[-1]))
+                        logger.debug(f'Pushing "{stack[-1]}" to the result from the stack')
                         result.append(stack.pop())
 
-                logger.debug('Pushing "{token}" on the stack'.format(token=item))
+                logger.debug(f'Pushing "{item}" on the stack')
                 stack.append(item)
 
             elif item[1] == Token.BRACKET_OPEN:
-                logger.debug('Pushing "{token}" on the stack'.format(token=item))
+                logger.debug(f'Pushing "{item}" on the stack')
                 stack.append(item)
             elif item[1] == Token.BRACKET_CLOSE:
                 while stack[-1][1] != Token.BRACKET_OPEN:
-                    logger.debug('Pushing "{token}" on the stack'.format(token=stack[-1]))
+                    logger.debug(f'Pushing "{stack[-1]}" on the stack')
                     result.append(stack.pop())
 
                 logger.debug('Removing open bracket from the stack')
