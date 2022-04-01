@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt, QEvent, Signal
 from PySide6.QtGui import QFont, QKeyEvent
 from PySide6.QtWidgets import QLineEdit, QWidget, QVBoxLayout, QLabel
 
-from src import Lexer, LexerException
+from src import LexerException, EasyWrapper
 from src.evaluator.consts import OPERATORS, SYMBOL_DEGREE, SYMBOL_MINUS, SYMBOL_BRACKET_OPEN
 
 
@@ -15,7 +15,6 @@ class MathInput(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.lexer = Lexer()
         self.valid = False
 
         layout = QVBoxLayout()
@@ -105,13 +104,21 @@ class MathInput(QWidget):
                                                                                                               16777223]:  # backspace, delete
                     return True
 
-                _ = self.lexer.parse(text)
-                self.error_label.setText('')
-                self.error_pointer.setText('')
+                res = EasyWrapper(text)
 
-                self.valid = True
+                if res.valid:
+                    self.error_label.setText('')
+                    self.error_pointer.setText('')
 
-                self.expressionChanged.emit()
+                    self.valid = True
+
+                    self.expressionChanged.emit()
+                else:
+                    self.error_label.setText(str(res.err))
+
+                    self.valid = False
+
+                    self.expressionChanged.emit()
             except LexerException as err:
                 self.error_label.setText(str(err))
 

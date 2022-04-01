@@ -10,9 +10,14 @@ from .tokenizer import Token
 
 logger = logging.getLogger('Evaluator')
 
-functions_cache = {item[0]: item[1] for item in getmembers(math, isbuiltin)}
+FUNCTIONS = {item[0]: item[1] for item in getmembers(math, isbuiltin)}
 # giga-brain move
-functions_cache.update({f'co{item[0]}': lambda x: 1 / functions_cache[item[0]](x) for item in functions_cache.items()})
+FUNCTIONS.update({f'co{item[0]}': lambda x, f=FUNCTIONS[item[0]]: 1.0 / f(x) for item in FUNCTIONS.items()})
+FUNCTIONS['ln'] = math.log
+FUNCTIONS['lb'] = math.log2
+FUNCTIONS['lg'] = math.log10
+FUNCTIONS['log_two'] = math.log2
+FUNCTIONS['log_ten'] = math.log10
 
 
 class Evaluator:
@@ -24,7 +29,6 @@ class Evaluator:
             SYMBOL_DIVIDE: lambda left, right: left / right,
             SYMBOL_DEGREE: lambda left, right: left ** right
         }
-        self._functions = functions_cache
 
     def eval(self, converter_result: ConverterResult, x: float = 0):
         assert converter_result
@@ -94,7 +98,7 @@ class Evaluator:
             name = item[0][1:]
             pos = False
 
-        func = self._functions.get(name)
+        func = FUNCTIONS.get(name)
         if not func:
             raise EvaluatorException(f'Unknown function {name}')
 
