@@ -7,7 +7,7 @@ logger = logging.getLogger('Lexer')
 
 EPSILON = 0.001
 N = int(100000 / 4)
-MAX_STEPS = 10000
+MAX_STEPS = N
 
 
 def solve_using_secant(expr: EasyWrapper, a: float, b: float):
@@ -18,7 +18,7 @@ def solve_using_secant(expr: EasyWrapper, a: float, b: float):
         b1 = expr(b)
 
         if a1 == b1:
-            logger.debug('Division by zero')
+            logger.error('Division by zero')
             return None
 
         x = a - (b - a) * a1 / (b1 - a1)

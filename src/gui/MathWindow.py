@@ -79,7 +79,8 @@ class MathWindow(QWidget):
         res = solve_using_secant(wrapper, self.options.a, self.options.b)
 
         if res is not None:
-            self.result.setText(f'x ≈ {res:.2f}')
+            evaluated = wrapper(res)
+            self.result.setText(f'x ≈ {res:.2f}, ⨍({res:.2f}) ≈ {evaluated:.8f}')
         else:
             self.result.setText('x ∈ ∅')
 
