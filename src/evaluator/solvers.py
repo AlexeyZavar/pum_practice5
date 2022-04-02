@@ -5,7 +5,7 @@ from .wrapper import EasyWrapper
 
 logger = logging.getLogger('Lexer')
 
-EPSILON = 0.001
+EPSILON = 0.0001
 N = int(100000 / 4)
 MAX_STEPS = N
 
@@ -39,7 +39,7 @@ def solve_using_secant(expr: EasyWrapper, a: float, b: float):
 
         step += 1
 
-    return x
+    return x if a <= x <= b else None
 
 
 def integral_using_simpson(expr: EasyWrapper, a: float, b: float, callback: Callable = None):
